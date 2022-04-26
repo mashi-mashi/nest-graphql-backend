@@ -23,6 +23,8 @@ CREATE TABLE "articles" (
     "publishTimestamp" TIMESTAMP(3) NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "ogpDescription" TEXT,
+    "ogpImageUrl" TEXT,
 
     CONSTRAINT "articles_pkey" PRIMARY KEY ("id")
 );
@@ -36,6 +38,8 @@ CREATE TABLE "providers" (
     "url" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "ogpDescription" TEXT,
+    "ogpImageUrl" TEXT,
 
     CONSTRAINT "providers_pkey" PRIMARY KEY ("id")
 );

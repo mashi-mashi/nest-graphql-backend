@@ -7,7 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// https://zenn.dev/masa5714/articles/7b887b9c8cc87a
 model User {
   id        String   @id @default(dbgenerated("uuid_generate_v4()"))
   email     String   @unique
@@ -31,20 +30,24 @@ model Article {
   publishTimestamp DateTime
   createdAt        DateTime @default(now())
   updatedAt        DateTime @default(now())
+  ogpDescription   String?
+  ogpImageUrl      String?
   Provider         Provider @relation(fields: [providerId], references: [id])
 
   @@map("articles")
 }
 
 model Provider {
-  id          String    @id @default(dbgenerated("uuid_generate_v4()"))
-  feedUrl     String
-  title       String?
-  description String?
-  url         String?
-  articles    Article[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @default(now())
+  id             String    @id @default(dbgenerated("uuid_generate_v4()"))
+  feedUrl        String
+  title          String?
+  description    String?
+  url            String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @default(now())
+  ogpDescription String?
+  ogpImageUrl    String?
+  articles       Article[]
 
   @@map("providers")
 }
