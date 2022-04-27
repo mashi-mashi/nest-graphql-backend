@@ -6,6 +6,7 @@ import {
   NestInterceptor,
 } from '@nestjs/common';
 import { map, Observable } from 'rxjs';
+import { deepTimestampToMillis } from './util/array-util';
 import { safeStringify } from './util/safe-stringify';
 
 @Injectable()
@@ -14,7 +15,7 @@ export class ResponseInterceptor implements NestInterceptor {
 
   intercept(
     _: ExecutionContext,
-    next: CallHandler<any>,
+    next: CallHandler,
   ): Observable<any> | Promise<Observable<any>> {
     return next.handle().pipe(
       map((data) => {
@@ -25,7 +26,7 @@ export class ResponseInterceptor implements NestInterceptor {
           {
             author: 'shima',
           },
-          { data },
+          { data: deepTimestampToMillis(data) },
         );
       }),
     );
