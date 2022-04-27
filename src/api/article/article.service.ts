@@ -12,4 +12,8 @@ export class ArticleService {
   ): Promise<Article | null> {
     return this.prisma.article.findUnique({ where: input });
   }
+
+  async getAll(input?: Prisma.ArticleFindManyArgs): Promise<Article[]> {
+    return this.prisma.article.findMany(input);
+  }
 }
