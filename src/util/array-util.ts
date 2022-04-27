@@ -5,6 +5,36 @@ export const chunk = <T extends any[]>(array: T, size: number): T[] =>
     [],
   );
 
+export const destructiveDeepDeleteUndefined = (data: Record<string, any>) => {
+  for (const [k, v] of Object.entries(data)) {
+    if (v === undefined) {
+      delete data[k];
+    } else if (v instanceof Array) {
+      for (const val of v) {
+        destructiveDeepDeleteUndefined(val);
+      }
+    } else if (v instanceof Object) {
+      destructiveDeepDeleteUndefined(v);
+    }
+  }
+};
+
+export const destructiveDeepDeleteUndefinedOrNull = (
+  data: Record<string, any>,
+) => {
+  for (const [k, v] of Object.entries(data)) {
+    if (v === undefined || v == null) {
+      delete data[k];
+    } else if (v instanceof Array) {
+      for (const val of v) {
+        destructiveDeepDeleteUndefinedOrNull(val);
+      }
+    } else if (v instanceof Object) {
+      destructiveDeepDeleteUndefinedOrNull(v);
+    }
+  }
+};
+
 type EpochMillis = number;
 
 type isDate<T> = T extends Date
@@ -28,42 +58,6 @@ export type DeepDateToMillis<T> = T extends Array<infer R>
         : T[P];
     }
   : T;
-
-/**
- * 破壊的!!!
- * undefinedのオブジェクトを再起的にデリートする
- * @param data
- */
-export const destructiveDeepDeleteUndefined = (data: Record<string, any>) => {
-  for (const [k, v] of Object.entries(data)) {
-    if (v === undefined) {
-      delete data[k];
-    } else if (v instanceof Array) {
-      for (const val of v) {
-        destructiveDeepDeleteUndefined(val);
-      }
-    } else if (v instanceof Object) {
-      destructiveDeepDeleteUndefined(v);
-    }
-  }
-};
-
-export const deepDeleteUndefined = (data: Record<string, any>) => {
-  const data2 = { ...data };
-  for (const [k, v] of Object.entries(data)) {
-    if (v === undefined) {
-      delete data2[k];
-      return data2;
-    } else if (v instanceof Array) {
-      for (const val of v) {
-        data2[k] = deepDeleteUndefined(val);
-      }
-    } else if (v instanceof Object) {
-      data2[k] = deepDeleteUndefined(v);
-    }
-  }
-  return data2;
-};
 
 export const deepTimestampToMillis = <T>(data: T): DeepDateToMillis<T> => {
   if (data instanceof Array) {

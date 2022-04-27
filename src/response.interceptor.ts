@@ -20,13 +20,15 @@ export class ResponseInterceptor implements NestInterceptor {
     return next.handle().pipe(
       map((data) => {
         this.logger.log(`data=${safeStringify(data)}`);
+        // destructiveDeepDeleteUndefinedOrNull(data);
 
         return Object.assign(
-          {},
           {
             author: 'shima',
           },
-          { data: deepTimestampToMillis(data) },
+          {
+            data,
+          },
         );
       }),
     );
