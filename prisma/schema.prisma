@@ -32,7 +32,7 @@ model Article {
   updatedAt        DateTime @default(now())
   ogpDescription   String?
   ogpImageUrl      String?
-  Provider         Provider @relation(fields: [providerId], references: [id])
+  Provider         Provider @relation(fields: [providerId], references: [id], onDelete: Cascade)
 
   @@map("articles")
 }
