@@ -77,3 +77,17 @@ Nest is [MIT licensed](LICENSE).
 ```
 gcloud run deploy --region asia-northeast1 --platform managed --source .
 ```
+
+## Supabase
+
+1. 追記
+
+```
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+```
+
+2. 手動で追加
+
+```
+alter user postgres with superuser;
+```
