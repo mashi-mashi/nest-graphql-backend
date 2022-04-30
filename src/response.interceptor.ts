@@ -6,7 +6,6 @@ import {
   NestInterceptor,
 } from '@nestjs/common';
 import { map, Observable } from 'rxjs';
-import { deepTimestampToMillis } from './util/array-util';
 import { safeStringify } from './util/safe-stringify';
 
 @Injectable()
