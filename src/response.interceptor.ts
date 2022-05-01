@@ -60,6 +60,7 @@ export class ResponseInterceptor implements NestInterceptor {
         return Object.assign(
           {
             author: 'NestJS',
+            statusCode: 200,
           },
           {
             data,
