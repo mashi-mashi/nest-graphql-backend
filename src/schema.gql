@@ -1,0 +1,12 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type AritcleModel {
+  id: String!
+  title: String!
+}
+
+type Query {
+  articles: [AritcleModel!]
+}

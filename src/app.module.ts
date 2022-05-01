@@ -5,9 +5,10 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { LoggerMiddleware } from './middleware/logger.middleware';
 import { PrismaService } from './prisma.service';
+import { GraphModule } from './gql/gql.module';
 
 @Module({
-  imports: [UserModule, ArticleModule],
+  imports: [UserModule, ArticleModule, GraphModule],
   controllers: [AppController],
   providers: [AppService, PrismaService],
 })
