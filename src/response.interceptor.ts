@@ -8,11 +8,11 @@ import {
 import { GqlContextType, GqlExecutionContext } from '@nestjs/graphql';
 import { Response } from 'express';
 import { map, Observable } from 'rxjs';
-import { safeStringify } from './util/safe-stringify';
+import { CustomLogger } from './middleware/logger.middleware';
 
 @Injectable()
 export class ResponseInterceptor implements NestInterceptor {
-  private readonly logger = new Logger(ResponseInterceptor.name);
+  private readonly logger = new CustomLogger(ResponseInterceptor.name);
 
   intercept(
     context: ExecutionContext,
@@ -71,10 +71,20 @@ export class ResponseInterceptor implements NestInterceptor {
   }
 
   private log(type: string, data: any, context?: any) {
-    this.logger.log(
-      `[${type.toUpperCase()}] data=${safeStringify(data)} context=${
-        safeStringify(context) || ''
-      }`,
-    );
+    // this.logger.log(
+    //   `[${type.toUpperCase()}] data=${safeStringify(data)} context=${
+    //     safeStringify(context) || ''
+    //   }`,
+    // );
+    this.logger.log('response', {
+      type,
+      response: data,
+      reqContext: context,
+    });
+    // this.logger.log({
+    //   type,
+    //   res: data,
+    //   reqContext: context,
+    // });
   }
 }
