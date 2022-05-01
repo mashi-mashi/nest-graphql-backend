@@ -8,7 +8,6 @@ import {
 import { GqlContextType, GqlExecutionContext } from '@nestjs/graphql';
 import { Response } from 'express';
 import { map, Observable } from 'rxjs';
-import { v4 as uuidv4 } from 'uuid';
 import { safeStringify } from './util/safe-stringify';
 
 @Injectable()
@@ -20,7 +19,6 @@ export class ResponseInterceptor implements NestInterceptor {
     next: CallHandler,
   ): Observable<any> | Promise<Observable<any>> {
     // Add request ID,so it can be tracked with response
-    const requestId = uuidv4();
 
     // Graphql
     if (context.getType<GqlContextType>() === 'graphql') {
@@ -37,14 +35,10 @@ export class ResponseInterceptor implements NestInterceptor {
       const body = info.fieldNodes[0]?.loc?.source?.body;
       const message = `GraphQL - ${parentType} - ${fieldName}`;
 
-      // Put to header, so can attach it to response as well
-      res?.setHeader('requestId', requestId);
-
       return next.handle().pipe(
         map((data) => {
           this.log(
             'graphql',
-            requestId,
             { ...data },
             {
               context: message,
@@ -61,11 +55,11 @@ export class ResponseInterceptor implements NestInterceptor {
 
     return next.handle().pipe(
       map((data) => {
-        this.log('http', requestId, data);
+        this.log('http', data);
 
         return Object.assign(
           {
-            requestId,
+            author: 'NestJS',
           },
           {
             data,
@@ -75,11 +69,11 @@ export class ResponseInterceptor implements NestInterceptor {
     );
   }
 
-  private log(type: string, requestId: string, data: any, context?: any) {
+  private log(type: string, data: any, context?: any) {
     this.logger.log(
-      `[${type}]requestId: ${requestId}, data=${safeStringify(
-        data,
-      )} context=${safeStringify(context)}`,
+      `[${type.toUpperCase()}] data=${safeStringify(data)} context=${
+        safeStringify(context) || ''
+      }`,
     );
   }
 }

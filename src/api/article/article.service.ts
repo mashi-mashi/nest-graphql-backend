@@ -14,6 +14,7 @@ export class ArticleService {
   }
 
   async getAll(input?: Prisma.ArticleFindManyArgs): Promise<Article[]> {
+    this.logger.log('getAll');
     return this.prisma.article.findMany(input);
   }
 }
