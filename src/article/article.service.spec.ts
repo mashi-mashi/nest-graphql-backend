@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { cleanupDatabase, execDbSeed } from './../../../test/test-db-util';
-import { PrismaService } from './../../prisma.service';
+import { PrismaService } from 'src/common/prisma.service';
+import { cleanupDatabase, execDbSeed } from 'test/test-db-util';
 import { ArticleService } from './article.service';
 
 describe('ArticleService', () => {
@@ -13,7 +13,6 @@ describe('ArticleService', () => {
     }).compile();
 
     service = module.get<ArticleService>(ArticleService);
-    pService = new PrismaService();
 
     await cleanupDatabase();
     await execDbSeed();

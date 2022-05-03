@@ -7,7 +7,7 @@ import {
 import { GqlContextType, GqlExecutionContext } from '@nestjs/graphql';
 import { Response } from 'express';
 import { map, Observable } from 'rxjs';
-import { CustomLogger } from '../util/logger';
+import { CustomLogger } from '../../util/logger';
 
 @Injectable()
 export class ResponseInterceptor implements NestInterceptor {

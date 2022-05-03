@@ -8,7 +8,7 @@ services:
     image: postgres:14-alpine
     container_name: local-test-db
     volumes:
-      - ./postgresql/init:/docker-entrypoint-initdb.d
+      - ./bin/postgresql:/docker-entrypoint-initdb.d
       - db-data:/var/lib/postgresql/db_development/data
     ports:
       - "5432:5432"

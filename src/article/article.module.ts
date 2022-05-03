@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { PrismaService } from 'src/prisma.service';
+import { PrismaService } from 'src/common/prisma.service';
 import { ParseOgpUsecase } from 'src/usecase/parse-ogp.usecase';
 import { ArticleController } from './article.controller';
 import { ArticleService } from './article.service';

@@ -1,13 +1,13 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { LoggerModule } from 'nestjs-pino';
 import { v4 } from 'uuid';
-import { ArticleModule } from './api/article/article.module';
-import { UserModule } from './api/user/user.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { ArticleModule } from './article/article.module';
+import { PrismaService } from './common/prisma.service';
 import { GraphModule } from './gql/gql.module';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
-import { PrismaService } from './prisma.service';
+import { UserModule } from './user/user.module';
 
 const SeverityLookup = {
   default: 'DEFAULT',

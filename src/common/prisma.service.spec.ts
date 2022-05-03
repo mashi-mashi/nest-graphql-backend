@@ -1,4 +1,4 @@
-import { cleanupDatabase, getTestDate } from './../test/test-db-util';
+import { cleanupDatabase, getTestDate } from 'test/test-db-util';
 import { PrismaService } from './prisma.service';
 
 describe('PrismaService', () => {
