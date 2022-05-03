@@ -4,8 +4,8 @@ import { JSDOM } from 'jsdom';
 import { safeStringify } from 'src/util/safe-stringify';
 
 @Injectable()
-export class ParseOgpUsecase {
-  private readonly logger = new Logger(ParseOgpUsecase.name);
+export class ParseOgpFeature {
+  private readonly logger = new Logger(ParseOgpFeature.name);
 
   async parseOgp(url: string): Promise<any> {
     if (!url) return;

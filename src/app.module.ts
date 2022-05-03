@@ -3,11 +3,11 @@ import { LoggerModule } from 'nestjs-pino';
 import { v4 } from 'uuid';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ArticleModule } from './article/article.module';
+import { ArticleModule } from './models/article/article.module';
 import { PrismaService } from './common/prisma.service';
 import { GraphModule } from './gql/gql.module';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
-import { UserModule } from './user/user.module';
+import { UserModule } from './models/user/user.module';
 
 const SeverityLookup = {
   default: 'DEFAULT',

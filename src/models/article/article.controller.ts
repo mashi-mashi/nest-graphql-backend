@@ -1,11 +1,11 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { ParseOgpUsecase } from 'src/usecase/parse-ogp.usecase';
+import { ParseOgpFeature } from 'src/features/parse-ogp.feature';
 import { ArticleService } from './article.service';
 
 @Controller('articles')
 export class ArticleController {
   constructor(
-    private readonly ogp: ParseOgpUsecase,
+    private readonly ogp: ParseOgpFeature,
     private readonly articleService: ArticleService,
   ) {}
 
