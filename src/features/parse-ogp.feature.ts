@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import axios from 'axios';
 import { JSDOM } from 'jsdom';
+import { HttpError } from 'src/util/response-util';
 import { safeStringify } from 'src/util/safe-stringify';
 
 @Injectable()
@@ -47,7 +48,10 @@ export class ParseOgpFeature {
       };
     } catch (error) {
       this.logger.error(error);
-      throw new Error(`failed to parse ogp:${url}`);
+
+      throw new HttpError({
+        message: `failed to parse ogp:${url}`,
+      });
     }
   }
 }

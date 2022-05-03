@@ -1,15 +1,13 @@
-import {
-  Controller,
-  Get,
-  HttpException,
-  HttpStatus,
-  Query,
-} from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { ParseOgpFeature } from 'src/features/parse-ogp.feature';
+import { CustomLogger } from 'src/util/logger';
+import { response } from 'src/util/response-util';
 import { ArticleService } from './article.service';
 
 @Controller('articles')
 export class ArticleController {
+  private readonly logger = new CustomLogger(ArticleController.name);
+
   constructor(
     private readonly ogp: ParseOgpFeature,
     private readonly articleService: ArticleService,
@@ -26,14 +24,8 @@ export class ArticleController {
 
   @Get('/parse-ogp')
   async parseOgp(@Query() query: { url: string }): Promise<any> {
-    return this.ogp.parseOgp(query.url).catch((e) => {
-      throw new HttpException(
-        {
-          status: HttpStatus.BAD_REQUEST,
-          error: e.message,
-        },
-        HttpStatus.BAD_REQUEST,
-      );
+    return response(() => this.ogp.parseOgp(query.url), {
+      logger: this.logger,
     });
   }
 }
