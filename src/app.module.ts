@@ -6,7 +6,7 @@ import { UserModule } from './api/user/user.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { GraphModule } from './gql/gql.module';
-import { LoggerMiddleware } from './middleware/logger.middleware';
+import { LoggerMiddleware } from './middlewares/logger.middleware';
 import { PrismaService } from './prisma.service';
 
 const SeverityLookup = {
