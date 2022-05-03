@@ -47,9 +47,7 @@ export class ParseOgpFeature {
       };
     } catch (error) {
       this.logger.error(error);
-      return {
-        message: 'failed to parse ogp',
-      };
+      throw new Error(`failed to parse ogp:${url}`);
     }
   }
 }
