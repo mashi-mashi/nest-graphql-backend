@@ -1,7 +1,7 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Request } from 'express';
 import { Observable } from 'rxjs';
-import { CustomLogger } from 'src/middleware/logger.middleware';
+import { CustomLogger } from 'src/util/logger';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -14,9 +14,7 @@ export class AuthGuard implements CanActivate {
 
     const apiKey = request.headers['x-api-key'];
     if (!apiKey) {
-      this.logger.warn('apiKey is not found', {
-        ddd: 'ddd',
-      });
+      this.logger.warn('apiKey is not found.');
       return false;
     }
 

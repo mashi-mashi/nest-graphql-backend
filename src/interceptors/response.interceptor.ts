@@ -2,13 +2,12 @@ import {
   CallHandler,
   ExecutionContext,
   Injectable,
-  Logger,
   NestInterceptor,
 } from '@nestjs/common';
 import { GqlContextType, GqlExecutionContext } from '@nestjs/graphql';
 import { Response } from 'express';
 import { map, Observable } from 'rxjs';
-import { CustomLogger } from './middleware/logger.middleware';
+import { CustomLogger } from '../util/logger';
 
 @Injectable()
 export class ResponseInterceptor implements NestInterceptor {
@@ -71,20 +70,10 @@ export class ResponseInterceptor implements NestInterceptor {
   }
 
   private log(type: string, data: any, context?: any) {
-    // this.logger.log(
-    //   `[${type.toUpperCase()}] data=${safeStringify(data)} context=${
-    //     safeStringify(context) || ''
-    //   }`,
-    // );
     this.logger.log('response', {
       type,
       response: data,
       reqContext: context,
     });
-    // this.logger.log({
-    //   type,
-    //   res: data,
-    //   reqContext: context,
-    // });
   }
 }

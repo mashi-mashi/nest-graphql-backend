@@ -30,18 +30,18 @@ const SeverityLookup = {
         level: process.env.LOG_LEVEL || 'debug',
         redact: ['request.headers.authorization'],
         genReqId: (req) => req.id ?? v4(),
-        // prettyPrint: process.env.IS_LOCAL
-        //   ? {
-        //       colorize: true,
-        //       singleLine: true,
-        //       levelFirst: false,
-        //       translateTime: 'yyyy-mm-dd HH:MM:ss.l',
-        //       messageFormat:
-        //         '{req.headers.x-correlation-id} [{context}] [{req.id}] {msg}',
-        //       ignore: 'pid,hostname,context,req,res,responseTime',
-        //       errorLikeObjectKeys: ['err', 'error'],
-        //     }
-        //   : null,
+        prettyPrint: process.env.IS_LOCAL
+          ? {
+              colorize: true,
+              singleLine: true,
+              levelFirst: false,
+              translateTime: 'yyyy-mm-dd HH:MM:ss.l',
+              messageFormat:
+                '{req.headers.x-correlation-id} [{context}] [{req.id}] {message}',
+              ignore: 'pid,hostname,context,req,res,responseTime',
+              errorLikeObjectKeys: ['err', 'error'],
+            }
+          : null,
         autoLogging: false,
         formatters: {
           level(label: string, number: number) {

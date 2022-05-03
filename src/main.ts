@@ -1,11 +1,11 @@
 import { NestFactory } from '@nestjs/core';
 import { Logger } from 'nestjs-pino';
 import { AppModule } from './app.module';
-import { ResponseInterceptor } from './response.interceptor';
+import { ResponseInterceptor } from './interceptors/response.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  // app.useGlobalInterceptors(new RequestInterceptor());
+
   app.useGlobalInterceptors(new ResponseInterceptor());
   const port = Number(process.env.PORT) || 3000; // Cloud Run の要件。環境変数PORTで起動するように。
 
