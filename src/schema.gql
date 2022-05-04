@@ -2,16 +2,7 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Mutation {
-  createTimeline(input: TimelineGQLModelInput!): TimelineDotGQLModel!
-}
-
-type Query {
-  timeline(id: String!): TimelineGQLModel!
-  timelines: [TimelineGQLModel!]!
-}
-
-type TimelineDotGQLModel {
+type GqlTimelineDotModel {
   createdAt: Float
   date: String!
   description: String!
@@ -21,16 +12,33 @@ type TimelineDotGQLModel {
   updatedAt: Float
 }
 
-type TimelineGQLModel {
+input GqlTimelineDotModelInput {
+  date: String!
+  description: String!
+  title: String!
+}
+
+type GqlTimelineModel {
   createdAt: Float
-  dots: [TimelineDotGQLModel!]
+  dots: [GqlTimelineDotModel!]
   id: String!
   status: String
   title: String!
   updatedAt: Float
 }
 
-input TimelineGQLModelInput {
+input GqlTimelineModelInput {
+  dots: [GqlTimelineDotModelInput!]!
   status: String
   title: String!
+}
+
+type Mutation {
+  createTimeline(input: GqlTimelineModelInput!): GqlTimelineDotModel!
+  deleteTimeline(id: String!): GqlTimelineDotModel!
+}
+
+type Query {
+  timeline(id: String!): GqlTimelineModel!
+  timelines: [GqlTimelineModel!]!
 }

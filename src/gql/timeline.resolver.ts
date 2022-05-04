@@ -8,11 +8,12 @@ import {
   Query,
   Resolver,
 } from '@nestjs/graphql';
+import { DateTime } from 'luxon';
 import { PrismaService } from 'src/common/prisma.service';
 import { CustomLogger } from 'src/util/logger';
 
 @ObjectType()
-export class TimelineDotGQLModel {
+export class GqlTimelineDotModel {
   @Field(() => String)
   id: string;
 
@@ -35,7 +36,7 @@ export class TimelineDotGQLModel {
 }
 
 @ObjectType()
-export class TimelineGQLModel {
+export class GqlTimelineModel {
   @Field(() => String)
   id: string;
 
@@ -50,35 +51,69 @@ export class TimelineGQLModel {
   @Field({ nullable: true })
   updatedAt: number;
 
-  @Field(() => [TimelineDotGQLModel], { nullable: true })
-  dots: TimelineDotGQLModel[];
+  @Field(() => [GqlTimelineDotModel], { nullable: true })
+  dots: GqlTimelineDotModel[];
 }
 
 @InputType()
-export class TimelineGQLModelInput {
+export class GqlTimelineDotModelInput {
   @Field(() => String)
   title: string;
+
+  @Field()
+  description: string;
+
+  @Field()
+  date: string;
+}
+
+@InputType()
+export class GqlTimelineModelInput {
+  @Field(() => String)
+  title: string;
+
   @Field({ nullable: true })
-  status: string;
+  status?: string;
+
+  @Field(() => [GqlTimelineDotModelInput])
+  dots: GqlTimelineDotModelInput[];
 }
 
 @Injectable()
-@Resolver(() => TimelineGQLModel)
+@Resolver(() => GqlTimelineModel)
 export class TimelineResolver {
   private readonly logger = new CustomLogger(TimelineResolver.name);
   constructor(private prisma: PrismaService) {}
 
-  @Mutation(() => TimelineDotGQLModel)
-  async createTimeline(@Args('input') args: TimelineGQLModelInput) {
-    return this.prisma.timeline.create({
+  @Mutation(() => GqlTimelineDotModel)
+  async createTimeline(@Args('input') args: GqlTimelineModelInput) {
+    return await this.prisma.timeline.create({
       data: {
         ...args,
         status: args.status || 'private',
+        // https://zenn.dev/kanasugi/articles/4dbca26e1c4753
+        dots: {
+          createMany: {
+            data: args.dots?.map((dot) => ({
+              ...dot,
+              date: DateTime.fromFormat(dot.date, 'yyyy-MM-dd').toJSDate(),
+            })),
+          },
+        },
       },
     });
   }
 
-  @Query(() => TimelineGQLModel)
+  @Mutation(() => GqlTimelineDotModel)
+  async deleteTimeline(@Args('id') id: string) {
+    return this.prisma.timeline.delete({
+      where: {
+        id,
+      },
+    });
+  }
+
+  @Query(() => GqlTimelineModel)
   async timeline(@Args('id') id: string) {
     const timeline = await this.prisma.timeline.findUnique({
       where: { id },
@@ -93,7 +128,7 @@ export class TimelineResolver {
     return timeline;
   }
 
-  @Query(() => [TimelineGQLModel])
+  @Query(() => [GqlTimelineModel])
   async timelines() {
     const timelines = await this.prisma.timeline.findMany({
       include: {
