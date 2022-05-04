@@ -2,6 +2,10 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Mutation {
+  createTimeline(input: TimelineGQLModelInput!): TimelineDotGQLModel!
+}
+
 type Query {
   timeline(id: String!): TimelineGQLModel!
   timelines: [TimelineGQLModel!]!
@@ -24,4 +28,9 @@ type TimelineGQLModel {
   status: String
   title: String!
   updatedAt: Float
+}
+
+input TimelineGQLModelInput {
+  status: String
+  title: String!
 }

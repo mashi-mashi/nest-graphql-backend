@@ -12,6 +12,9 @@ import { TimelineResolver } from './timeline.resolver';
       sortSchema: true,
       driver: ApolloDriver,
       context: (context) => context,
+      buildSchemaOptions: {
+        dateScalarMode: 'timestamp',
+      },
     }),
   ],
   providers: [TimelineResolver, PrismaService],

@@ -1,6 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Args, Field, ObjectType, Query } from '@nestjs/graphql';
-import { DateTime } from 'luxon';
+import {
+  Args,
+  Field,
+  InputType,
+  Mutation,
+  ObjectType,
+  Query,
+  Resolver,
+} from '@nestjs/graphql';
 import { PrismaService } from 'src/common/prisma.service';
 import { CustomLogger } from 'src/util/logger';
 
@@ -47,10 +54,29 @@ export class TimelineGQLModel {
   dots: TimelineDotGQLModel[];
 }
 
+@InputType()
+export class TimelineGQLModelInput {
+  @Field(() => String)
+  title: string;
+  @Field({ nullable: true })
+  status: string;
+}
+
 @Injectable()
+@Resolver(() => TimelineGQLModel)
 export class TimelineResolver {
   private readonly logger = new CustomLogger(TimelineResolver.name);
   constructor(private prisma: PrismaService) {}
+
+  @Mutation(() => TimelineDotGQLModel)
+  async createTimeline(@Args('input') args: TimelineGQLModelInput) {
+    return this.prisma.timeline.create({
+      data: {
+        ...args,
+        status: args.status || 'private',
+      },
+    });
+  }
 
   @Query(() => TimelineGQLModel)
   async timeline(@Args('id') id: string) {
@@ -60,27 +86,11 @@ export class TimelineResolver {
         dots: true,
       },
     });
-
     if (!timeline) {
       throw new NotFoundException('Timeline not found');
     }
 
-    return {
-      id: timeline.id,
-      title: timeline.title,
-      status: timeline.status,
-      createdAt: timeline.createdAt.valueOf(),
-      updatedAt: timeline.updatedAt.valueOf(),
-      dots: timeline.dots.map((dot) => ({
-        id: dot.id,
-        timelineId: dot.timelineId,
-        title: dot.title,
-        description: dot.description,
-        date: DateTime.fromJSDate(dot.date).toFormat('yyyy-MM-dd'),
-        createdAt: dot.createdAt.valueOf(),
-        updatedAt: dot.updatedAt.valueOf(),
-      })),
-    };
+    return timeline;
   }
 
   @Query(() => [TimelineGQLModel])
@@ -91,22 +101,6 @@ export class TimelineResolver {
       },
     });
 
-    return timelines.map((timeline) => ({
-      id: timeline.id,
-      title: timeline.title,
-      status: timeline.status,
-      createdAt: timeline.createdAt.valueOf(),
-      updatedAt: timeline.updatedAt.valueOf(),
-
-      dots: timeline.dots.map((dot) => ({
-        id: dot.id,
-        timelineId: dot.timelineId,
-        title: dot.title,
-        description: dot.description,
-        date: dot.date.toLocaleDateString(),
-        createdAt: dot.createdAt.valueOf(),
-        updatedAt: dot.updatedAt.valueOf(),
-      })),
-    }));
+    return timelines;
   }
 }
