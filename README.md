@@ -22,6 +22,13 @@ alter user postgres with superuser;
 docker-compose up
 ```
 
+- migrate
+
+```
+yarn db:migrate:local
+
+```
+
 - 起動
 
 ```

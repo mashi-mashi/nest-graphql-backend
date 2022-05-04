@@ -6,12 +6,12 @@ volumes:
 services:
   db:
     image: postgres:14-alpine
-    container_name: local-test-db
+    container_name: timeline-local
     volumes:
       - ./bin/postgresql:/docker-entrypoint-initdb.d
-      - db-data:/var/lib/postgresql/db_development/data
+      - db-data:/var/lib/postgresql/timeline_dev/data
     ports:
-      - "5432:5432"
+      - 5432:5432
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
