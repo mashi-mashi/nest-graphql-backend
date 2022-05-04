@@ -27,7 +27,7 @@ export class GqlTimelineDotModel {
   description: string;
 
   @Field()
-  date: string;
+  date: number;
 
   @Field({ nullable: true })
   createdAt: number;

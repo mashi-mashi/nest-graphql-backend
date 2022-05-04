@@ -4,7 +4,7 @@
 
 type GqlTimelineDotModel {
   createdAt: Float
-  date: String!
+  date: Float!
   description: String!
   id: String!
   timelineId: String!

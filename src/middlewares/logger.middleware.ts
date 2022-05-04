@@ -1,7 +1,6 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { NextFunction, Request, Response } from 'express';
 import { CustomLogger } from 'src/util/logger';
-import { safeStringify } from 'src/util/safe-stringify';
 import { v4 } from 'uuid';
 
 @Injectable()
