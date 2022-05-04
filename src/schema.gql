@@ -2,7 +2,34 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type GqlTimelineDotModel {
+type Mutation {
+  createTimeline(input: TimelineCreateInput!): Timeline!
+  deleteTimeline(id: String!): Timeline!
+  updateTimeline(id: String!, input: TimelineUpdateInput!): Timeline!
+  updateTimelineDots(id: String!, input: TimelineDotUpdateInput!): TimelineDot!
+}
+
+type Query {
+  timeline(id: String!): Timeline!
+  timelines: [Timeline!]!
+}
+
+type Timeline {
+  createdAt: Float
+  dots: [TimelineDot!]
+  id: String!
+  status: String
+  title: String!
+  updatedAt: Float
+}
+
+input TimelineCreateInput {
+  dots: [TimelineDotCreateInput!]!
+  status: String
+  title: String!
+}
+
+type TimelineDot {
   createdAt: Float
   date: Float!
   description: String!
@@ -12,48 +39,21 @@ type GqlTimelineDotModel {
   updatedAt: Float
 }
 
-input GqlTimelineDotModelCreateInput {
+input TimelineDotCreateInput {
   """format yyyy-MM-dd"""
   date: String!
   description: String!
   title: String!
 }
 
-input GqlTimelineDotModelUpdateInput {
+input TimelineDotUpdateInput {
   """format yyyy-MM-dd"""
   date: String
   description: String
   title: String
 }
 
-type GqlTimelineModel {
-  createdAt: Float
-  dots: [GqlTimelineDotModel!]
-  id: String!
-  status: String
-  title: String!
-  updatedAt: Float
-}
-
-input GqlTimelineModelCreateInput {
-  dots: [GqlTimelineDotModelCreateInput!]
-  status: String
-  title: String!
-}
-
-input GqlTimelineModelUpdateInput {
+input TimelineUpdateInput {
   status: String
   title: String
-}
-
-type Mutation {
-  createTimeline(input: GqlTimelineModelCreateInput!): GqlTimelineModel!
-  deleteTimeline(id: String!): GqlTimelineModel!
-  updateTimeline(id: String!, input: GqlTimelineModelUpdateInput!): GqlTimelineModel!
-  updateTimelineDots(id: String!, input: GqlTimelineDotModelUpdateInput!): GqlTimelineDotModel!
-}
-
-type Query {
-  timeline(id: String!): GqlTimelineModel!
-  timelines: [GqlTimelineModel!]!
 }

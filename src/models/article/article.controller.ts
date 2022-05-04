@@ -1,7 +1,7 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { ParseOgpFeature } from 'src/features/parse-ogp.feature';
 import { CustomLogger } from 'src/util/logger';
-import { sendResponse } from 'src/util/response-util';
+import { sendResponse } from 'src/util/api-util';
 import { ArticleService } from './article.service';
 
 @Controller('articles')

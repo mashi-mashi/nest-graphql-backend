@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import axios from 'axios';
 import { JSDOM } from 'jsdom';
-import { HttpError } from 'src/util/response-util';
+import { HttpError } from 'src/util/api-util';
 import { safeStringify } from 'src/util/safe-stringify';
 
 @Injectable()

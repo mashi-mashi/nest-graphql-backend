@@ -4,6 +4,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import * as path from 'path';
 import { PrismaService } from 'src/common/prisma.service';
 import { TimelineResolver } from './timeline.resolver';
+import { TimelineService } from './timeline.service';
 
 @Module({
   imports: [
@@ -12,12 +13,14 @@ import { TimelineResolver } from './timeline.resolver';
       sortSchema: true,
       playground: true,
       driver: ApolloDriver,
-      context: (context) => context,
+      context: ({ req }) => ({
+        req,
+      }),
       buildSchemaOptions: {
         dateScalarMode: 'timestamp',
       },
     }),
   ],
-  providers: [TimelineResolver, PrismaService],
+  providers: [TimelineResolver, PrismaService, TimelineService],
 })
 export class GraphModule {}

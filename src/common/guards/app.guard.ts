@@ -1,6 +1,6 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-import { Request } from 'express';
 import { Observable } from 'rxjs';
+import { getRequest } from 'src/util/api-util';
 import { CustomLogger } from 'src/util/logger';
 
 @Injectable()
@@ -10,9 +10,9 @@ export class AuthGuard implements CanActivate {
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
-    const request = context.switchToHttp().getRequest<Request>();
+    const req = getRequest(context);
 
-    const apiKey = request.headers['x-api-key'];
+    const apiKey = req.headers['x-api-key'];
     if (!apiKey) {
       this.logger.warn('apiKey is not found.');
       return false;

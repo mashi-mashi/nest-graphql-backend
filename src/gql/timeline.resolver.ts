@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, UseGuards } from '@nestjs/common';
 import {
   Args,
   Field,
@@ -9,11 +9,12 @@ import {
   Resolver,
 } from '@nestjs/graphql';
 import { DateTime } from 'luxon';
+import { AuthGuard } from 'src/common/guards/app.guard';
 import { PrismaService } from 'src/common/prisma.service';
-import { CustomLogger } from 'src/util/logger';
+import { TimelineService } from './timeline.service';
 
 @ObjectType()
-export class GqlTimelineDotModel {
+export class TimelineDot {
   @Field(() => String)
   id: string;
 
@@ -36,7 +37,7 @@ export class GqlTimelineDotModel {
 }
 
 @ObjectType()
-export class GqlTimelineModel {
+export class Timeline {
   @Field(() => String)
   id: string;
 
@@ -51,12 +52,12 @@ export class GqlTimelineModel {
   @Field({ nullable: true })
   updatedAt: number;
 
-  @Field(() => [GqlTimelineDotModel], { nullable: true })
-  dots: GqlTimelineDotModel[];
+  @Field(() => [TimelineDot], { nullable: true })
+  dots: TimelineDot[];
 }
 
 @InputType()
-export class GqlTimelineDotModelCreateInput {
+export class TimelineDotCreateInput {
   @Field(() => String)
   title: string;
 
@@ -68,7 +69,7 @@ export class GqlTimelineDotModelCreateInput {
 }
 
 @InputType()
-export class GqlTimelineDotModelUpdateInput {
+export class TimelineDotUpdateInput {
   @Field(() => String, { nullable: true })
   title?: string;
 
@@ -79,26 +80,20 @@ export class GqlTimelineDotModelUpdateInput {
   date?: string;
 }
 
-// @InputType()
-// export class GqlTimelineDotModelBulkUpdateInput {
-//   @Field(() => [GqlTimelineDotModel])
-//   dots: GqlTimelineDotModelUpdateInput[];
-// }
-
 @InputType()
-export class GqlTimelineModelCreateInput {
+export class TimelineCreateInput {
   @Field(() => String)
   title: string;
 
   @Field({ nullable: true })
   status?: string;
 
-  @Field(() => [GqlTimelineDotModelCreateInput], { nullable: true })
-  dots: GqlTimelineDotModelCreateInput[];
+  @Field(() => [TimelineDotCreateInput])
+  dots: TimelineDotCreateInput[];
 }
 
 @InputType()
-export class GqlTimelineModelUpdateInput {
+export class TimelineUpdateInput {
   @Field(() => String, { nullable: true })
   title?: string;
 
@@ -107,34 +102,23 @@ export class GqlTimelineModelUpdateInput {
 }
 
 @Injectable()
-@Resolver(() => GqlTimelineModel)
+@UseGuards(AuthGuard)
+@Resolver(() => Timeline)
 export class TimelineResolver {
-  private readonly logger = new CustomLogger(TimelineResolver.name);
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private timelineService: TimelineService,
+  ) {}
 
-  @Mutation(() => GqlTimelineModel)
-  async createTimeline(@Args('input') args: GqlTimelineModelCreateInput) {
-    return await this.prisma.timeline.create({
-      data: {
-        ...args,
-        status: args.status || 'private',
-        // https://zenn.dev/kanasugi/articles/4dbca26e1c4753
-        dots: {
-          createMany: {
-            data: args.dots?.map((dot) => ({
-              ...dot,
-              date: DateTime.fromFormat(dot.date, 'yyyy-MM-dd').toJSDate(),
-            })),
-          },
-        },
-      },
-    });
+  @Mutation(() => Timeline)
+  async createTimeline(@Args('input') args: TimelineCreateInput) {
+    return this.timelineService.create(args);
   }
 
-  @Mutation(() => GqlTimelineModel)
+  @Mutation(() => Timeline)
   async updateTimeline(
     @Args('id') id: string,
-    @Args('input') args: GqlTimelineModelUpdateInput,
+    @Args('input') args: TimelineUpdateInput,
   ) {
     return await this.prisma.timeline.update({
       where: { id },
@@ -145,7 +129,7 @@ export class TimelineResolver {
     });
   }
 
-  @Mutation(() => GqlTimelineModel)
+  @Mutation(() => Timeline)
   async deleteTimeline(@Args('id') id: string) {
     return this.prisma.timeline.delete({
       where: {
@@ -154,10 +138,10 @@ export class TimelineResolver {
     });
   }
 
-  @Mutation(() => GqlTimelineDotModel)
+  @Mutation(() => TimelineDot)
   async updateTimelineDots(
     @Args('id') id: string,
-    @Args('input') args: GqlTimelineDotModelUpdateInput,
+    @Args('input') args: TimelineDotUpdateInput,
   ) {
     return this.prisma.timelineDots.update({
       where: {
@@ -172,7 +156,7 @@ export class TimelineResolver {
     });
   }
 
-  @Query(() => GqlTimelineModel)
+  @Query(() => Timeline)
   async timeline(@Args('id') id: string) {
     const timeline = await this.prisma.timeline.findUnique({
       where: { id },
@@ -187,7 +171,7 @@ export class TimelineResolver {
     return timeline;
   }
 
-  @Query(() => [GqlTimelineModel])
+  @Query(() => [Timeline])
   async timelines() {
     const timelines = await this.prisma.timeline.findMany({
       include: {

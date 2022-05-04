@@ -43,7 +43,8 @@ export class ResponseInterceptor implements NestInterceptor {
               context: message,
               trace: {
                 userId,
-                body,
+                body:
+                  typeof body === 'string' ? body.replace(/\n/g, ' ') : body,
               },
             },
           );
