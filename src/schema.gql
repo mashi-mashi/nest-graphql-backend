@@ -2,6 +2,11 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type GetTimelineResponse {
+  timelines: [Timeline!]!
+  totalCount: Float!
+}
+
 type Mutation {
   createTimeline(input: TimelineCreateInput!): Timeline!
   deleteTimeline(id: String!): Timeline!
@@ -10,8 +15,8 @@ type Mutation {
 }
 
 type Query {
-  timeline(id: String!): Timeline!
-  timelines: [Timeline!]!
+  getTimelineById(id: String!): Timeline!
+  getTimelines: GetTimelineResponse!
 }
 
 type Timeline {

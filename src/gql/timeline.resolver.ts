@@ -8,9 +8,11 @@ import {
   Query,
   Resolver,
 } from '@nestjs/graphql';
+import { Prisma, Timeline as PrismaTimeline } from '@prisma/client';
 import { DateTime } from 'luxon';
 import { AuthGuard } from 'src/common/guards/app.guard';
 import { PrismaService } from 'src/common/prisma.service';
+import { DeepDateToMillis } from 'src/util/array-util';
 import { TimelineService } from './timeline.service';
 
 @ObjectType()
@@ -37,7 +39,9 @@ export class TimelineDot {
 }
 
 @ObjectType()
-export class Timeline {
+export class Timeline implements DeepDateToMillis<PrismaTimeline> {
+  userId: string;
+
   @Field(() => String)
   id: string;
 
@@ -101,6 +105,15 @@ export class TimelineUpdateInput {
   status?: string;
 }
 
+@ObjectType()
+export class GetTimelineResponse {
+  @Field(() => [Timeline])
+  timelines: Timeline[];
+
+  @Field()
+  totalCount: number;
+}
+
 @Injectable()
 @UseGuards(AuthGuard)
 @Resolver(() => Timeline)
@@ -157,7 +170,7 @@ export class TimelineResolver {
   }
 
   @Query(() => Timeline)
-  async timeline(@Args('id') id: string) {
+  async getTimelineById(@Args('id') id: string) {
     const timeline = await this.prisma.timeline.findUnique({
       where: { id },
       include: {
@@ -171,14 +184,17 @@ export class TimelineResolver {
     return timeline;
   }
 
-  @Query(() => [Timeline])
-  async timelines() {
+  @Query(() => GetTimelineResponse)
+  async getTimelines() {
     const timelines = await this.prisma.timeline.findMany({
       include: {
         dots: true,
       },
     });
 
-    return timelines;
+    return {
+      timelines,
+      totalCount: timelines.length,
+    };
   }
 }

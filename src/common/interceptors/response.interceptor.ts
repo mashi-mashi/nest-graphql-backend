@@ -5,7 +5,6 @@ import {
   NestInterceptor,
 } from '@nestjs/common';
 import { GqlContextType, GqlExecutionContext } from '@nestjs/graphql';
-import { Response } from 'express';
 import { map, Observable } from 'rxjs';
 import { CustomLogger } from '../../util/logger';
 
@@ -23,8 +22,8 @@ export class ResponseInterceptor implements NestInterceptor {
     if (context.getType<GqlContextType>() === 'graphql') {
       const gqlContext = GqlExecutionContext.create(context);
       const info = gqlContext.getInfo();
-      // Express Response
-      const res = gqlContext.getContext<{ res: Response }>().res;
+      // // Express Response
+      // const res = gqlContext.getContext<{ res: Response }>().res;
 
       // Get user that sent request
       const userId = context.getArgByIndex(2).req?.user?.userId;
