@@ -12,10 +12,18 @@ type GqlTimelineDotModel {
   updatedAt: Float
 }
 
-input GqlTimelineDotModelInput {
+input GqlTimelineDotModelCreateInput {
+  """format yyyy-MM-dd"""
   date: String!
   description: String!
   title: String!
+}
+
+input GqlTimelineDotModelUpdateInput {
+  """format yyyy-MM-dd"""
+  date: String
+  description: String
+  title: String
 }
 
 type GqlTimelineModel {
@@ -27,15 +35,22 @@ type GqlTimelineModel {
   updatedAt: Float
 }
 
-input GqlTimelineModelInput {
-  dots: [GqlTimelineDotModelInput!]!
+input GqlTimelineModelCreateInput {
+  dots: [GqlTimelineDotModelCreateInput!]
   status: String
   title: String!
 }
 
+input GqlTimelineModelUpdateInput {
+  status: String
+  title: String
+}
+
 type Mutation {
-  createTimeline(input: GqlTimelineModelInput!): GqlTimelineDotModel!
-  deleteTimeline(id: String!): GqlTimelineDotModel!
+  createTimeline(input: GqlTimelineModelCreateInput!): GqlTimelineModel!
+  deleteTimeline(id: String!): GqlTimelineModel!
+  updateTimeline(id: String!, input: GqlTimelineModelUpdateInput!): GqlTimelineModel!
+  updateTimelineDots(id: String!, input: GqlTimelineDotModelUpdateInput!): GqlTimelineDotModel!
 }
 
 type Query {
