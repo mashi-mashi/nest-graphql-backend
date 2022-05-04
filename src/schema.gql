@@ -9,4 +9,10 @@ type AritcleModel {
 
 type Query {
   articles: [AritcleModel!]
+  findById(id: String!): TimelineGQLModel!
+}
+
+type TimelineGQLModel {
+  id: String!
+  title: String!
 }

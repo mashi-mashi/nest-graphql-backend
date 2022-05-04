@@ -3,6 +3,11 @@ import { Logger } from 'nestjs-pino';
 import { AppModule } from './app.module';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 
+import * as dotenv from 'dotenv';
+
+dotenv.config(); // Load the environment variables
+console.log(`The connection URL is ${process.env.DATABASE_URL}`);
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 

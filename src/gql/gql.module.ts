@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import * as path from 'path';
 import { ArticleResolver } from 'src/gql/article.resolver';
+import { TimelineResolver } from './timeline.resolver';
 
 @Module({
   imports: [
@@ -13,6 +14,6 @@ import { ArticleResolver } from 'src/gql/article.resolver';
       context: (context) => context,
     }),
   ],
-  providers: [ArticleResolver],
+  providers: [ArticleResolver, TimelineResolver],
 })
 export class GraphModule {}
