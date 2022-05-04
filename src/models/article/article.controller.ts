@@ -1,7 +1,7 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { ParseOgpFeature } from 'src/features/parse-ogp.feature';
 import { CustomLogger } from 'src/util/logger';
-import { response } from 'src/util/response-util';
+import { sendResponse } from 'src/util/response-util';
 import { ArticleService } from './article.service';
 
 @Controller('articles')
@@ -24,7 +24,7 @@ export class ArticleController {
 
   @Get('/parse-ogp')
   async parseOgp(@Query() query: { url: string }): Promise<any> {
-    return response(() => this.ogp.parseOgp(query.url), {
+    return sendResponse(() => this.ogp.parseOgp(query.url), {
       logger: this.logger,
     });
   }

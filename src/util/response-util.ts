@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { CustomLogger } from './logger';
 
-export const response = async <T>(
+export const sendResponse = async <T>(
   func: (body?: any) => Promise<T> | T,
   { logger = new CustomLogger('createResponse') },
 ) => {

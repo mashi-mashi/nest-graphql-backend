@@ -1,14 +1,38 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Args, Field, ObjectType, Query } from '@nestjs/graphql';
+import { DateTime } from 'luxon';
 import { PrismaService } from 'src/common/prisma.service';
 import { CustomLogger } from 'src/util/logger';
 
 @ObjectType()
-export class TimelineGQLModel {
-  @Field((type) => String)
+export class TimelineDotGQLModel {
+  @Field(() => String)
   id: string;
 
-  @Field((type) => String)
+  @Field()
+  timelineId: string;
+
+  @Field(() => String)
+  title: string;
+
+  @Field()
+  description: string;
+
+  @Field()
+  date: string;
+
+  @Field({ nullable: true })
+  createdAt: number;
+  @Field({ nullable: true })
+  updatedAt: number;
+}
+
+@ObjectType()
+export class TimelineGQLModel {
+  @Field(() => String)
+  id: string;
+
+  @Field(() => String)
   title: string;
 
   @Field({ nullable: true })
@@ -18,6 +42,9 @@ export class TimelineGQLModel {
   createdAt: number;
   @Field({ nullable: true })
   updatedAt: number;
+
+  @Field(() => [TimelineDotGQLModel], { nullable: true })
+  dots: TimelineDotGQLModel[];
 }
 
 @Injectable()
@@ -29,6 +56,9 @@ export class TimelineResolver {
   async timeline(@Args('id') id: string) {
     const timeline = await this.prisma.timeline.findUnique({
       where: { id },
+      include: {
+        dots: true,
+      },
     });
 
     if (!timeline) {
@@ -41,18 +71,25 @@ export class TimelineResolver {
       status: timeline.status,
       createdAt: timeline.createdAt.valueOf(),
       updatedAt: timeline.updatedAt.valueOf(),
+      dots: timeline.dots.map((dot) => ({
+        id: dot.id,
+        timelineId: dot.timelineId,
+        title: dot.title,
+        description: dot.description,
+        date: DateTime.fromJSDate(dot.date).toFormat('yyyy-MM-dd'),
+        createdAt: dot.createdAt.valueOf(),
+        updatedAt: dot.updatedAt.valueOf(),
+      })),
     };
   }
 
   @Query(() => [TimelineGQLModel])
   async timelines() {
-    console.log('!!!!!!!!!', this.prisma);
-    const timelines = await this.prisma.timeline.findMany().catch((err) => {
-      console.error('e', err);
-      return [];
+    const timelines = await this.prisma.timeline.findMany({
+      include: {
+        dots: true,
+      },
     });
-
-    console.log('timelines', timelines);
 
     return timelines.map((timeline) => ({
       id: timeline.id,
@@ -60,6 +97,16 @@ export class TimelineResolver {
       status: timeline.status,
       createdAt: timeline.createdAt.valueOf(),
       updatedAt: timeline.updatedAt.valueOf(),
+
+      dots: timeline.dots.map((dot) => ({
+        id: dot.id,
+        timelineId: dot.timelineId,
+        title: dot.title,
+        description: dot.description,
+        date: dot.date.toLocaleDateString(),
+        createdAt: dot.createdAt.valueOf(),
+        updatedAt: dot.updatedAt.valueOf(),
+      })),
     }));
   }
 }

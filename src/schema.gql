@@ -2,19 +2,24 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type AritcleModel {
-  id: String!
-  title: String!
-}
-
 type Query {
-  articles: [AritcleModel!]
   timeline(id: String!): TimelineGQLModel!
   timelines: [TimelineGQLModel!]!
 }
 
+type TimelineDotGQLModel {
+  createdAt: Float
+  date: String!
+  description: String!
+  id: String!
+  timelineId: String!
+  title: String!
+  updatedAt: Float
+}
+
 type TimelineGQLModel {
   createdAt: Float
+  dots: [TimelineDotGQLModel!]
   id: String!
   status: String
   title: String!
