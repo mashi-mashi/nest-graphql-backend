@@ -11,19 +11,16 @@ export class LoggerMiddleware implements NestMiddleware {
   use(req: Request, _: Response, next: NextFunction) {
     req.id = req.id ?? v4();
 
-    this.logger.log(
-      `[${req.method}]${req.url} request params=${safeStringify(req.params)}`,
-      {
-        requestInfo: {
-          method: req.method,
-          url: req.originalUrl,
-          headers: req.headers,
-          body: req.body,
-          params: req.params,
-          id: req.id,
-        },
+    this.logger.log(`[${req.method}]${req.url} request}`, {
+      requestInfo: {
+        method: req.method,
+        url: req.originalUrl,
+        headers: req.headers,
+        body: req.body,
+        params: req.params,
+        id: req.id,
       },
-    );
+    });
 
     next();
   }

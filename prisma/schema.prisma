@@ -12,7 +12,7 @@ model User {
   email     String     @unique
   name      String?
   createdAt DateTime   @default(now())
-  updatedAt DateTime   @default(now())
+  updatedAt DateTime   @default(now()) @updatedAt
   Timeline  Timeline[]
 
   @@map("users")
@@ -59,7 +59,7 @@ model Timeline {
   title     String
   status    String
   createdAt DateTime       @default(now())
-  updatedAt DateTime       @default(now())
+  updatedAt DateTime       @default(now()) @updatedAt
   dots      TimelineDots[]
 
   User User? @relation(fields: [userId], references: [id])
@@ -74,7 +74,7 @@ model TimelineDots {
   date        DateTime
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 
   Timeline Timeline @relation(fields: [timelineId], references: [id], onDelete: Cascade)
   @@map("timeline_dots")

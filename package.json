@@ -11,7 +11,7 @@
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:lcoal": "IS_LOCAL=true nest start --watch",
-    "start:dev": "nest start --watch",
+    "start:dev": "IS_LOCAL=true dotenv -e .env.dev -- nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/src/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
@@ -20,7 +20,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "db:migrate": "dotenv -e .env -- npx prisma migrate dev",
+    "db:migrate:local": "dotenv -e .env -- npx prisma migrate dev",
     "db:migrate:dev": "dotenv -e .env.dev -- npx prisma migrate dev"
   },
   "dependencies": {

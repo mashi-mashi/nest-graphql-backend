@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Article, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/common/prisma.service';
 

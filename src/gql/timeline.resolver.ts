@@ -1,6 +1,7 @@
-import { NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Args, Field, ObjectType, Query } from '@nestjs/graphql';
 import { PrismaService } from 'src/common/prisma.service';
+import { CustomLogger } from 'src/util/logger';
 
 @ObjectType()
 export class TimelineGQLModel {
@@ -10,17 +11,23 @@ export class TimelineGQLModel {
   @Field((type) => String)
   title: string;
 
+  @Field({ nullable: true })
   status: string;
 
+  @Field({ nullable: true })
   createdAt: number;
+  @Field({ nullable: true })
   updatedAt: number;
 }
+
+@Injectable()
 export class TimelineResolver {
-  constructor(private readonly prismaService: PrismaService) {}
+  private readonly logger = new CustomLogger(TimelineResolver.name);
+  constructor(private prisma: PrismaService) {}
 
   @Query(() => TimelineGQLModel)
-  async findById(@Args('id') id: string) {
-    const timeline = await this.prismaService.timeline.findUnique({
+  async timeline(@Args('id') id: string) {
+    const timeline = await this.prisma.timeline.findUnique({
       where: { id },
     });
 
@@ -35,5 +42,24 @@ export class TimelineResolver {
       createdAt: timeline.createdAt.valueOf(),
       updatedAt: timeline.updatedAt.valueOf(),
     };
+  }
+
+  @Query(() => [TimelineGQLModel])
+  async timelines() {
+    console.log('!!!!!!!!!', this.prisma);
+    const timelines = await this.prisma.timeline.findMany().catch((err) => {
+      console.error('e', err);
+      return [];
+    });
+
+    console.log('timelines', timelines);
+
+    return timelines.map((timeline) => ({
+      id: timeline.id,
+      title: timeline.title,
+      status: timeline.status,
+      createdAt: timeline.createdAt.valueOf(),
+      updatedAt: timeline.updatedAt.valueOf(),
+    }));
   }
 }

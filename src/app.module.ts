@@ -30,7 +30,7 @@ const SeverityLookup = {
         level: process.env.LOG_LEVEL || 'debug',
         redact: ['request.headers.authorization'],
         genReqId: (req) => req.id ?? v4(),
-        prettyPrint: process.env.IS_LOCAL
+        prettyPrint: !process.env.IS_LOCAL
           ? {
               colorize: true,
               singleLine: true,
