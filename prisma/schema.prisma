@@ -8,11 +8,12 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(dbgenerated("uuid_generate_v4()"))
-  email     String   @unique
+  id        String     @id @default(dbgenerated("uuid_generate_v4()"))
+  email     String     @unique
   name      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @default(now())
+  Timeline  Timeline[]
 
   @@map("users")
 }
@@ -50,4 +51,31 @@ model Provider {
   articles       Article[]
 
   @@map("providers")
+}
+
+model Timeline {
+  id        String         @id @default(dbgenerated("uuid_generate_v4()"))
+  userId    String?
+  title     String
+  status    String
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @default(now())
+  dots      TimelineDots[]
+
+  User User? @relation(fields: [userId], references: [id])
+  @@map("timelines")
+}
+
+model TimelineDots {
+  id          String   @id @default(dbgenerated("uuid_generate_v4()"))
+  timelineId  String
+  title       String
+  description String
+  date        DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  Timeline Timeline @relation(fields: [timelineId], references: [id], onDelete: Cascade)
+  @@map("timeline_dots")
 }
